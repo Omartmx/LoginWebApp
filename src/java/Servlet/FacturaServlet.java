@@ -56,7 +56,7 @@ public class FacturaServlet extends HttpServlet {
     private void guardarFactura(HttpServletRequest request, HttpServletResponse response,
             Integer idUsuario, HttpSession session) throws IOException {
         try (PrintWriter out = response.getWriter()) {
-            Connection conn = Conexion.conectar();
+            Connection conn = Conexion.getConexion();
             // Insertar nueva factura
             String sql = "INSERT INTO facturas (id_usuario, tipo_documento, numero_documento, ocupacion, "
                     + "libro, libro_id, precio_dia, dias_alquiler, descuento, fecha_inicio, "
@@ -102,7 +102,7 @@ public class FacturaServlet extends HttpServlet {
         try (PrintWriter out = response.getWriter()) {
             Integer idFactura = (Integer) session.getAttribute("id_factura");
             if (idFactura != null) {
-                Connection conn = Conexion.conectar();
+                Connection conn = Conexion.getConexion();
                 // Marcar factura como inactiva
                 String sql = "UPDATE facturas SET activa = FALSE WHERE id = ?";
                 PreparedStatement ps = conn.prepareStatement(sql);
@@ -140,7 +140,7 @@ public class FacturaServlet extends HttpServlet {
 
     private void cargarFactura(Integer idFactura, PrintWriter out) {
         try {
-            Connection conn = Conexion.conectar();
+            Connection conn = Conexion.getConexion();
             String sql = "SELECT * FROM facturas WHERE id = ?";
             PreparedStatement ps = conn.prepareStatement(sql);
             ps.setInt(1, idFactura);

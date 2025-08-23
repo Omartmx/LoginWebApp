@@ -32,7 +32,7 @@ public class LoginServlet extends HttpServlet {
             String password = request.getParameter("password");
 
             try {
-                Connection conn = Conexion.conectar();
+                Connection conn = Conexion.getConexion();
                 
                 // Consulta para autenticar usuario
                 String sql = "SELECT * FROM usuarios WHERE email=? AND password=?";

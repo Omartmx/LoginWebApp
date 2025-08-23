@@ -10,7 +10,7 @@ public class Login {
     boolean ok = false;
     try {
         Conexion con = new Conexion();
-        Connection cn = con.conectar();
+        Connection cn = Conexion.getConexion();
 
         String sql = "SELECT * FROM usuarios WHERE email=? AND password=?";
         PreparedStatement ps = cn.prepareStatement(sql);

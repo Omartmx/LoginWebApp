@@ -5,12 +5,19 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 
 public class Conexion {
-    private static final String URL = "jdbc:mysql://localhost:3306/loginwebappdb";
-    private static final String USER = "root";  // tu usuario MySQL
-    private static final String PASS = ""; // tu contraseña MySQL
+    public static Connection getConexion() {
+        try {
+            String host = System.getenv("DB_HOST");
+            String port = System.getenv("DB_PORT");
+            String db = System.getenv("DB_NAME");
+            String user = System.getenv("DB_USER");
+            String pass = System.getenv("DB_PASS");
 
-    public static Connection conectar() throws Exception {
-        Class.forName("com.mysql.cj.jdbc.Driver");
-        return DriverManager.getConnection(URL, USER, PASS);
+            String url = "jdbc:mysql://" + host + ":" + port + "/" + db + "?useSSL=false&serverTimezone=UTC";
+            return DriverManager.getConnection(url, user, pass);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 }

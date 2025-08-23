@@ -31,7 +31,7 @@ public class RegistroServlet extends HttpServlet {
         String password = request.getParameter("password");
 
         try {
-            Connection conn = Conexion.conectar();
+            Connection conn = Conexion.getConexion();
 
             // 2️⃣ Verificar si el email ya existe
             String checkSql = "SELECT * FROM usuarios WHERE email=?";

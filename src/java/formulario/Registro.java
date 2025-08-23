@@ -24,7 +24,7 @@ public class Registro extends Formulario implements IRegistro {
     public void registrarUsuario() {
         if (persona != null) {
             try {
-                Connection cn = Conexion.conectar();
+                Connection cn = Conexion.getConexion();
 
                 String sql = "INSERT INTO usuarios (nombre, apellido, email, password) VALUES (?, ?, ?, ?)";
                 PreparedStatement ps = cn.prepareStatement(sql);
