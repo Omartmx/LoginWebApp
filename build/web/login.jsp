@@ -12,7 +12,7 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>Login - Libreria Hogwarts</title>
 
-        <style>
+       <style>
             * {
                 margin: 0;
                 padding: 0;
@@ -38,6 +38,7 @@
                 padding: 40px;
                 box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
                 border: 1px solid rgba(255, 255, 255, 0.1);
+                position: relative;
             }
 
             .logo {
@@ -147,6 +148,42 @@
             .decoration:nth-child(2) {
                 bottom: 10%;
                 right: 10%;
+            }
+
+            .error-message {
+                color: #ff4d4d;
+                background-color: rgba(255, 77, 77, 0.1);
+                border: 1px solid rgba(255, 77, 77, 0.3);
+                padding: 12px;
+                border-radius: 8px;
+                margin-bottom: 20px;
+                text-align: center;
+                display: none;
+                animation: fadeIn 0.5s ease;
+            }
+
+            .error-message.show {
+                display: block;
+            }
+
+            .input-error {
+                border-color: #ff4d4d !important;
+                box-shadow: 0 0 10px rgba(255, 77, 77, 0.3) !important;
+            }
+
+            @keyframes fadeIn {
+                from { opacity: 0; transform: translateY(-10px); }
+                to { opacity: 1; transform: translateY(0); }
+            }
+
+            @keyframes shake {
+                0%, 100% { transform: translateX(0); }
+                10%, 30%, 50%, 70%, 90% { transform: translateX(-5px); }
+                20%, 40%, 60%, 80% { transform: translateX(5px); }
+            }
+
+            .shake {
+                animation: shake 0.5s ease;
             }
 
             @media (max-width: 576px) {

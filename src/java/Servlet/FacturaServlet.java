@@ -23,7 +23,6 @@ public class FacturaServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-
         response.setContentType("application/json");
         response.setCharacterEncoding("UTF-8");
 
@@ -35,17 +34,15 @@ public class FacturaServlet extends HttpServlet {
             String paramValue = request.getParameter(paramName);
             System.out.println(paramName + " = " + paramValue);
         }
+
         try (PrintWriter out = response.getWriter()) {
             HttpSession session = request.getSession();
             Integer idUsuario = (Integer) session.getAttribute("id_usuario");
-
             if (idUsuario == null) {
                 out.print("{\"success\": false, \"error\": \"Usuario no autenticado\"}");
                 return;
             }
-
             String action = request.getParameter("action");
-
             if ("guardar".equals(action)) {
                 guardarFactura(request, response, idUsuario, session);
             } else if ("cancelar".equals(action)) {
@@ -58,15 +55,13 @@ public class FacturaServlet extends HttpServlet {
 
     private void guardarFactura(HttpServletRequest request, HttpServletResponse response,
             Integer idUsuario, HttpSession session) throws IOException {
-
         try (PrintWriter out = response.getWriter()) {
             Connection conn = Conexion.conectar();
-
             // Insertar nueva factura
             String sql = "INSERT INTO facturas (id_usuario, tipo_documento, numero_documento, ocupacion, "
                     + "libro, libro_id, precio_dia, dias_alquiler, descuento, fecha_inicio, "
                     + "fecha_entrega, dias_retraso, total_pagar) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
-
+            
             PreparedStatement ps = conn.prepareStatement(sql, PreparedStatement.RETURN_GENERATED_KEYS);
             ps.setInt(1, idUsuario);
             ps.setString(2, request.getParameter("tipoDocumento"));
@@ -81,9 +76,7 @@ public class FacturaServlet extends HttpServlet {
             ps.setString(11, request.getParameter("fechaEntrega"));
             ps.setString(12, request.getParameter("diasRetraso"));
             ps.setDouble(13, Double.parseDouble(request.getParameter("total")));
-
             int affectedRows = ps.executeUpdate();
-
             if (affectedRows > 0) {
                 // Obtener el ID de la factura recién creada
                 ResultSet generatedKeys = ps.getGeneratedKeys();
@@ -96,7 +89,6 @@ public class FacturaServlet extends HttpServlet {
             } else {
                 out.print("{\"success\": false, \"error\": \"No se pudo guardar la factura\"}");
             }
-
             conn.close();
         } catch (Exception e) {
             try (PrintWriter out = response.getWriter()) {
@@ -107,21 +99,17 @@ public class FacturaServlet extends HttpServlet {
 
     private void cancelarFactura(HttpServletRequest request, HttpServletResponse response,
             HttpSession session) throws IOException {
-
         try (PrintWriter out = response.getWriter()) {
             Integer idFactura = (Integer) session.getAttribute("id_factura");
             if (idFactura != null) {
                 Connection conn = Conexion.conectar();
-
                 // Marcar factura como inactiva
                 String sql = "UPDATE facturas SET activa = FALSE WHERE id = ?";
                 PreparedStatement ps = conn.prepareStatement(sql);
                 ps.setInt(1, idFactura);
                 ps.executeUpdate();
-
                 session.setAttribute("factura_activa", false);
                 session.removeAttribute("id_factura");
-
                 out.print("{\"success\": true}");
                 conn.close();
             } else {
@@ -137,14 +125,11 @@ public class FacturaServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-
         response.setContentType("application/json");
         response.setCharacterEncoding("UTF-8");
-
         try (PrintWriter out = response.getWriter()) {
             HttpSession session = request.getSession();
             Integer idFactura = (Integer) session.getAttribute("id_factura");
-
             if (idFactura != null) {
                 cargarFactura(idFactura, out);
             } else {
@@ -156,13 +141,10 @@ public class FacturaServlet extends HttpServlet {
     private void cargarFactura(Integer idFactura, PrintWriter out) {
         try {
             Connection conn = Conexion.conectar();
-
             String sql = "SELECT * FROM facturas WHERE id = ?";
             PreparedStatement ps = conn.prepareStatement(sql);
             ps.setInt(1, idFactura);
-
             ResultSet rs = ps.executeQuery();
-
             if (rs.next()) {
                 StringBuilder json = new StringBuilder();
                 json.append("{")
@@ -182,12 +164,10 @@ public class FacturaServlet extends HttpServlet {
                         .append("\"total\": ").append(rs.getDouble("total_pagar"))
                         .append("}")
                         .append("}");
-
                 out.print(json.toString());
             } else {
                 out.print("{\"success\": false, \"error\": \"Factura no encontrada\"}");
             }
-
             conn.close();
         } catch (Exception e) {
             out.print("{\"success\": false, \"error\": \"" + e.getMessage().replace("\"", "'") + "\"}");
