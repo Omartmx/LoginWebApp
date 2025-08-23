@@ -6,18 +6,25 @@ import java.sql.DriverManager;
 
 public class Conexion {
     public static Connection getConexion() {
+        Connection conn = null;
         try {
-            String host = System.getenv("DB_HOST");
-            String port = System.getenv("DB_PORT");
-            String db = System.getenv("DB_NAME");
-            String user = System.getenv("DB_USER");
-            String pass = System.getenv("DB_PASS");
-
-            String url = "jdbc:mysql://" + host + ":" + port + "/" + db + "?useSSL=false&serverTimezone=UTC";
-            return DriverManager.getConnection(url, user, pass);
+            // Usa estos nombres de variables (Railway los provee así)
+            String host = System.getenv("MYSQLHOST");        // "shortline.proxy.rlwy.net"
+            String port = System.getenv("MYSQLPORT");        // "13326"
+            String db   = System.getenv("MYSQLDATABASE");    // "railway"
+            String user = System.getenv("MYSQLUSER");        // "root"
+            String pass = System.getenv("MYSQLPASSWORD");    // "jqTNGGgmNMWjDCleorllathSENosCLBY"
+            
+            // URL corregida - IMPORTANTE: añade allowPublicKeyRetrieval
+            String url = "jdbc:mysql://" + host + ":" + port + "/" + db + 
+                        "?useSSL=true&allowPublicKeyRetrieval=true&serverTimezone=UTC";
+            
+            conn = DriverManager.getConnection(url, user, pass);
+            System.out.println("✅ Conexión exitosa a Railway MySQL");
         } catch (Exception e) {
-            e.printStackTrace();
-            return null;
+            System.out.println("❌ Error en la conexión: " + e.getMessage());
+            e.printStackTrace(); // Para más detalles del error
         }
+        return conn;
     }
 }
