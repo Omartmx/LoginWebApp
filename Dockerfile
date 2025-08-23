@@ -1,17 +1,14 @@
 FROM tomcat:9.0-jre17
 
-# Copiar el WAR a Tomcat
-COPY ./target/LoginWebApp.war /usr/local/tomcat/webapps/ROOT.war
+# Copiar TODO el proyecto a Tomcat
+COPY . /usr/local/tomcat/webapps/ROOT/
 
-# Puerto para Render
+# Puerto que Render usa
 EXPOSE 8080
 
-# Health check
+# Health check para Render
 HEALTHCHECK --interval=30s --timeout=30s --start-period=5s --retries=3 \
   CMD curl -f http://localhost:8080/health || exit 1
 
-# Comando de inicio
+# Iniciar Tomcat
 CMD ["catalina.sh", "run"]
-
-# Agrega un comentario al final
-# Redeploy: $(date)
