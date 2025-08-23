@@ -3,11 +3,11 @@ FROM tomcat:9.0-jre17
 # Crear directorio principal
 RUN mkdir -p /usr/local/tomcat/webapps/ROOT
 
-# Copiar solo lo que EXISTE en tu proyecto
-COPY ./Web\ Pages/ /usr/local/tomcat/webapps/ROOT/ 2>/dev/null || echo "Web Pages not found, skipping"
-COPY ./Source\ Packages/ /usr/local/tomcat/webapps/ROOT/WEB-INF/classes/ 2>/dev/null || echo "Source Packages not found, skipping"
-COPY ./META-INF/ /usr/local/tomcat/webapps/ROOT/META-INF/ 2>/dev/null || echo "META-INF not found, skipping"
-COPY ./WEB-INF/ /usr/local/tomcat/webapps/ROOT/WEB-INF/ 2>/dev/null || echo "WEB-INF not found, skipping"
+# Copiar carpetas con espacios (usando comillas y escape correcto)
+COPY "Web Pages/" /usr/local/tomcat/webapps/ROOT/ 2>/dev/null || echo "Web Pages not found, skipping"
+COPY "Source Packages/" /usr/local/tomcat/webapps/ROOT/WEB-INF/classes/ 2>/dev/null || echo "Source Packages not found, skipping"
+COPY "META-INF/" /usr/local/tomcat/webapps/ROOT/META-INF/ 2>/dev/null || echo "META-INF not found, skipping"
+COPY "WEB-INF/" /usr/local/tomcat/webapps/ROOT/WEB-INF/ 2>/dev/null || echo "WEB-INF not found, skipping"
 
 # Si no tienes WEB-INF, crea una básica
 RUN if [ ! -d "/usr/local/tomcat/webapps/ROOT/WEB-INF" ]; then \
