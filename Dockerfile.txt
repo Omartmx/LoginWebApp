@@ -12,3 +12,6 @@ HEALTHCHECK --interval=30s --timeout=30s --start-period=5s --retries=3 \
 
 # Comando de inicio
 CMD ["catalina.sh", "run"]
+
+# Agrega un comentario al final
+# Redeploy: $(date)
