@@ -183,7 +183,6 @@
                 <h1>Registro de Usuarios</h1>
             </div>
 
-            <!-- 🔹 Solo un formulario -->
             <form class="form-container" action="RegistroServlet" method="POST">
                 <div class="form-row">
                     <div class="form-group">
@@ -197,34 +196,36 @@
                     </div>
                 </div>
 
-                <div class="form-group">
-                    <label for="email">Email</label>
-                    <input type="email" id="email" name="email" required>
-                </div>
+                <form class="login-form" action="RegistroServlet" method="POST">
+                    <div class="form-group">
+                        <label for="email">Email</label>
+                        <input type="email" id="email" name="email" required>
+                    </div>
 
-                <div class="form-group">
-                    <label for="password">Password</label>
-                    <input type="password" id="password" name="password" required>
-                </div>
+                    <div class="form-group">
+                        <label for="password">Password</label>
+                        <input type="password" id="password" name="password" required>
+                    </div>
 
-                <button type="submit" class="btn-register">Registrar Usuario</button>
+                    <button type="submit" class="btn-register">Registrar Usuario</button>
+                </form>
+
+                <!-- 🟢 Aquí mostramos el mensaje -->
+                <%
+                    String mensaje = (String) request.getAttribute("mensaje");
+                    if (mensaje != null) {
+                %>
+                <p style="color:white; text-align:center; margin-top:10px;">
+                    <%= mensaje%>
+                </p>
+                <%
+                    }
+                %>
+
+                <div class="login-link">
+                    <p>¿Ya tienes una cuenta? <a href="login.jsp">Inicia sesión</a></p>
+                </div>
             </form>
-
-            <!-- 🟢 Mostrar mensaje -->
-            <%
-                String mensaje = (String) request.getAttribute("mensaje");
-                if (mensaje != null) {
-            %>
-            <p style="color:white; text-align:center; margin-top:10px;">
-                <%= mensaje%>
-            </p>
-            <%
-                }
-            %>
-
-            <div class="login-link">
-                <p>¿Ya tienes una cuenta? <a href="login.jsp">Inicia sesión</a></p>
-            </div>
         </div>
     </body>
 </html>
