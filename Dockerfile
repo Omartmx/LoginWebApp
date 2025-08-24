@@ -1,13 +1,9 @@
-FROM maven:3.9.6-eclipse-temurin-17 AS build
+FROM tomcat:9.0-jre17
 
-COPY . /app
-WORKDIR /app
-RUN mvn clean package
+# Copiar solo lo esencial - la carpeta web/
+COPY ./web/ /usr/local/tomcat/webapps/ROOT/
 
-FROM tomcat:9.0.108-jre17
-
-COPY --from=build /app/target/LoginWebApp.war /usr/local/tomcat/webapps/ROOT.war
-
+# Las clases se copiarán manualmente o se compilarán después
 EXPOSE 8080
 HEALTHCHECK --interval=30s --timeout=30s --start-period=5s --retries=3 \
   CMD curl -f http://localhost:8080/health || exit 1
