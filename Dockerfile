@@ -9,7 +9,7 @@ RUN mvn clean package
 
 FROM tomcat:9.0.108-jre17
 
-# Copiar el WAR generado (CORREGIDO)
+# Copiar el WAR generado - ¡CORREGIDO!
 COPY --from=build /app/target/LoginWebApp.war /usr/local/tomcat/webapps/ROOT.war
 
 EXPOSE 8080
