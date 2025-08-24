@@ -1,26 +1,10 @@
-FROM maven:3.9.6-eclipse-temurin-17 AS build
+FROM tomcat:9.0-jre17
 
-COPY . /app
-WORKDIR /app
-
-# Compilar solo
-RUN mvn clean compile
-
-FROM tomcat:9.0.108-jre17
-
-# Copiar web files
+# Copiar solo lo esencial - la carpeta web/
 COPY ./web/ /usr/local/tomcat/webapps/ROOT/
 
-# Copiar clases compiladas (si existen)
-COPY --from=build /app/target/classes/ /usr/local/tomcat/webapps/ROOT/WEB-INF/classes/
-
-# Verificar estructura FINAL
-RUN echo "=== ESTRUCTURA FINAL ===" && \
-    ls -la /usr/local/tomcat/webapps/ROOT/ && \
-    echo "=== WEB-INF ===" && \
-    ls -la /usr/local/tomcat/webapps/ROOT/WEB-INF/ && \
-    echo "=== CLASSES ===" && \
-    ls -la /usr/local/tomcat/webapps/ROOT/WEB-INF/classes/
-
+# Las clases se copiarán manualmente o se compilarán después
 EXPOSE 8080
+HEALTHCHECK --interval=30s --timeout=30s --start-period=5s --retries=3 \
+  CMD curl -f http://localhost:8080/health || exit 1
 CMD ["catalina.sh", "run"]
