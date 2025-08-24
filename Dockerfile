@@ -1,10 +1,17 @@
+FROM maven:3.9.6-eclipse-temurin-17 AS build
+
+# Copiar TODO el proyecto
+COPY . /app
+WORKDIR /app
+
+# Compilar las clases
+RUN mvn clean compile
+
 FROM tomcat:9.0.108-jre17
 
+# Copiar web files y las clases compiladas
 COPY ./web/ /usr/local/tomcat/webapps/ROOT/
-
-# DEBUG: Verificar si las clases existen
-RUN echo "=== BUSCANDO CLASES ===" && \
-    find /usr/local/tomcat/webapps/ROOT/WEB-INF/classes -name "*.class" 2>/dev/null || echo "NO hay clases .class"
+COPY --from=build /app/target/classes/ /usr/local/tomcat/webapps/ROOT/WEB-INF/classes/
 
 EXPOSE 8080
 CMD ["catalina.sh", "run"]
