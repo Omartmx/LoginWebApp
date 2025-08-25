@@ -5,10 +5,18 @@ Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/Html.html to edit thi
 --><!DOCTYPE html>
 <html>
 <head>
+    <meta charset="UTF-8">
     <title>Redirección a Login</title>
-    <meta http-equiv="refresh" content="0; URL=login.jsp">
+    <script>
+        // Redirección inmediata a la página de login
+        window.location.href = "login.jsp";
+    </script>
 </head>
 <body>
-    <p>Redirigiendo al sistema de login...</p>
+    <noscript>
+        <h2>Redireccionando...</h2>
+        <p>Si no eres redirigido automáticamente, haz clic en el siguiente enlace:</p>
+        <a href="login.jsp">Ir a la página de login</a>
+    </noscript>
 </body>
 </html>
