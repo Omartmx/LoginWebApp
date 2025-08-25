@@ -1,0 +1,19 @@
+services:
+  - type: web
+    name: loginwebapp
+    env: java
+    buildCommand: "mvn clean package -DskipTests"
+    startCommand: "java -jar target/LoginWebApp.war"
+    envVars:
+      - key: JAVA_VERSION
+        value: 17
+      - key: MYSQLHOST
+        sync: false
+      - key: MYSQLPORT
+        sync: false
+      - key: MYSQLDATABASE
+        sync: false
+      - key: MYSQLUSER
+        sync: false
+      - key: MYSQLPASSWORD
+        sync: false
