@@ -1,2 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<Context path="/LoginWebApp"/>
+<Context>
+    <Resource name="jdbc/mysql" auth="Container"
+              type="javax.sql.DataSource" 
+              maxTotal="100" maxIdle="30" maxWaitMillis="10000"
+              username="${MYSQLUSER}" 
+              password="${MYSQLPASSWORD}"
+              driverClassName="com.mysql.cj.jdbc.Driver"
+              url="jdbc:mysql://${MYSQLHOST}:${MYSQLPORT}/${MYSQLDATABASE}?useSSL=false&amp;serverTimezone=UTC"/>
+</Context>
