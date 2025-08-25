@@ -42,11 +42,11 @@
         <url-pattern>/health</url-pattern>
     </servlet-mapping>
 
-    <!-- Página de bienvenida -->
-    <welcome-file-list>
+   <welcome-file-list>
+        <welcome-file>index.jsp</welcome-file>
+        <welcome-file>index.html</welcome-file>
         <welcome-file>login.jsp</welcome-file>
     </welcome-file-list>
-    <!-- Configuración de encoding -->
     <filter>
         <filter-name>EncodingFilter</filter-name>
         <filter-class>org.apache.catalina.filters.SetCharacterEncodingFilter</filter-class>

@@ -8,3 +8,9 @@
               driverClassName="com.mysql.cj.jdbc.Driver"
               url="jdbc:mysql://${MYSQLHOST}:${MYSQLPORT}/${MYSQLDATABASE}?useSSL=false&amp;serverTimezone=UTC"/>
 </Context>
+
+<welcome-file-list>
+    <welcome-file>index.html</welcome-file>
+    <welcome-file>index.jsp</welcome-file>
+    <welcome-file>login.jsp</welcome-file>
+</welcome-file-list>
