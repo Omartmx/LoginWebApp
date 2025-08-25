@@ -1,8 +1,3 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/Servlet.java to edit this template
- */
-
 package Servlet;
 
 import java.sql.ResultSet;
@@ -17,7 +12,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-@WebServlet(name = "RegistroServlet", urlPatterns = {"/RegistroServlet"})
+@WebServlet("/RegistroServlet")
 public class RegistroServlet extends HttpServlet {
 
     @Override
@@ -30,33 +25,48 @@ public class RegistroServlet extends HttpServlet {
         String email = request.getParameter("email");
         String password = request.getParameter("password");
 
+        System.out.println("✅ RegistroServlet recibió petición");
+        System.out.println("Datos: " + nombre + " " + apellido + " " + email);
+
         try {
             Connection conn = Conexion.getConexion();
-
-            // 2️⃣ Verificar si el email ya existe
-            String checkSql = "SELECT * FROM usuarios WHERE email=?";
-            PreparedStatement checkPs = conn.prepareStatement(checkSql);
-            checkPs.setString(1, email);
-            ResultSet rs = checkPs.executeQuery();
-
-            if (rs.next()) {
-                // ❌ Usuario ya existe
-                request.setAttribute("mensaje", "❌ Usuario ya registrado.");
+            
+            // Debug: verificar si la conexión es nula
+            if (conn == null) {
+                System.out.println("❌ La conexión es NULL");
+                request.setAttribute("mensaje", "Error de conexión a la base de datos");
             } else {
-                // 3️⃣ Insertar nuevo usuario
-                String insertSql = "INSERT INTO usuarios (nombre, apellido, email, password) VALUES (?, ?, ?, ?)";
-                PreparedStatement ps = conn.prepareStatement(insertSql);
-                ps.setString(1, nombre);
-                ps.setString(2, apellido);
-                ps.setString(3, email);
-                ps.setString(4, password);
-                ps.executeUpdate();
+                System.out.println("✅ Conexión establecida: " + conn.toString());
+                
+                // 2️⃣ Verificar si el email ya existe
+                String checkSql = "SELECT * FROM usuarios WHERE email=?";
+                PreparedStatement checkPs = conn.prepareStatement(checkSql);
+                checkPs.setString(1, email);
+                ResultSet rs = checkPs.executeQuery();
 
-                request.setAttribute("mensaje", "✅ Usuario registrado correctamente.");
+                if (rs.next()) {
+                    // ❌ Usuario ya existe
+                    System.out.println("❌ Usuario ya registrado: " + email);
+                    request.setAttribute("mensaje", "❌ Usuario ya registrado.");
+                } else {
+                    // 3️⃣ Insertar nuevo usuario
+                    String insertSql = "INSERT INTO usuarios (nombre, apellido, email, password) VALUES (?, ?, ?, ?)";
+                    PreparedStatement ps = conn.prepareStatement(insertSql);
+                    ps.setString(1, nombre);
+                    ps.setString(2, apellido);
+                    ps.setString(3, email);
+                    ps.setString(4, password);
+                    ps.executeUpdate();
+
+                    System.out.println("✅ Usuario registrado: " + email);
+                    request.setAttribute("mensaje", "✅ Usuario registrado correctamente.");
+                }
+                conn.close();
             }
-
-            conn.close();
+            
         } catch (Exception e) {
+            System.out.println("❌ Excepción en conexión: " + e.getMessage());
+            e.printStackTrace();
             request.setAttribute("mensaje", "⚠️ Error: " + e.getMessage());
         }
 
