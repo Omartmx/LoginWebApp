@@ -1,21 +1,16 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0"
-         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 
-         http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
-
     <groupId>com.loginwebapp</groupId>
     <artifactId>LoginWebApp</artifactId>
     <version>1.0.0</version>
     <packaging>war</packaging>
-
+    
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.compiler.source>17</maven.compiler.source>
         <maven.compiler.target>17</maven.compiler.target>
     </properties>
-
+    
     <dependencies>
         <!-- Servlet API -->
         <dependency>
@@ -24,7 +19,6 @@
             <version>4.0.1</version>
             <scope>provided</scope>
         </dependency>
-
         <!-- MySQL Connector -->
         <dependency>
             <groupId>mysql</groupId>
@@ -32,14 +26,10 @@
             <version>8.0.33</version>
         </dependency>
     </dependencies>
-
+    
     <build>
+        <finalName>LoginWebApp</finalName>
         <sourceDirectory>src</sourceDirectory>
-        <resources>
-            <resource>
-                <directory>Web Pages</directory>
-            </resource>
-        </resources>
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -48,6 +38,15 @@
                 <configuration>
                     <source>17</source>
                     <target>17</target>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-war-plugin</artifactId>
+                <version>3.3.1</version>
+                <configuration>
+                    <warSourceDirectory>Web Pages</warSourceDirectory>
+                    <failOnMissingWebXml>false</failOnMissingWebXml>
                 </configuration>
             </plugin>
         </plugins>
