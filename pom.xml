@@ -28,6 +28,19 @@
     <build>
         <finalName>LoginWebApp</finalName>
         <sourceDirectory>src/main/java</sourceDirectory>
+        
+        <resources>
+            <resource>
+                <directory>src/main/webapp</directory>
+                <targetPath>.</targetPath>
+                <includes>
+                    <include>**/*.jsp</include>
+                    <include>**/*.html</include>
+                    <include>**/*.xml</include>
+                </includes>
+            </resource>
+        </resources>
+        
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
