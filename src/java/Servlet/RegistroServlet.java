@@ -3,7 +3,6 @@ package Servlet;
 import java.sql.ResultSet;
 import conexion.Conexion;
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import javax.servlet.ServletException;
@@ -76,7 +75,7 @@ public class RegistroServlet extends HttpServlet {
         }
     }
     
-    // ✅ MÉTODO testConnection CORRECTAMENTE UBICADO - FUERA de doPost pero DENTRO de la clase
+    // ✅ MÉTODO testConnection
     private boolean testConnection() {
         try {
             Connection conn = Conexion.getConexion();
