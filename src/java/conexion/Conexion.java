@@ -8,14 +8,13 @@ public class Conexion {
     public static Connection getConexion() {
         Connection conn = null;
         try {
-            // Usa estos nombres de variables (Railway los provee así)
-            String host = System.getenv("MYSQLHOST");        // "shortline.proxy.rlwy.net"
-            String port = System.getenv("MYSQLPORT");        // "13326"
-            String db   = System.getenv("MYSQLDATABASE");    // "railway"
-            String user = System.getenv("MYSQLUSER");        // "root"
-            String pass = System.getenv("MYSQLPASSWORD");    // "jqTNGGgmNMWjDCleorllathSENosCLBY"
+            // CAMBIA getenv() por getProperty()
+            String host = System.getProperty("MYSQLHOST");        // ← CAMBIADO
+            String port = System.getProperty("MYSQLPORT");        // ← CAMBIADO
+            String db   = System.getProperty("MYSQLDATABASE");    // ← CAMBIADO
+            String user = System.getProperty("MYSQLUSER");        // ← CAMBIADO
+            String pass = System.getProperty("MYSQLPASSWORD");    // ← CAMBIADO
             
-            // URL corregida - IMPORTANTE: añade allowPublicKeyRetrieval
             String url = "jdbc:mysql://" + host + ":" + port + "/" + db + 
                         "?useSSL=true&allowPublicKeyRetrieval=true&serverTimezone=UTC";
             
@@ -23,7 +22,7 @@ public class Conexion {
             System.out.println("✅ Conexión exitosa a Railway MySQL");
         } catch (Exception e) {
             System.out.println("❌ Error en la conexión: " + e.getMessage());
-            e.printStackTrace(); // Para más detalles del error
+            e.printStackTrace();
         }
         return conn;
     }
