@@ -1,40 +1,45 @@
-# === ETAPA 1: BUILD ===
-# Usa una imagen oficial de Maven con la implementación Eclipse Temurin de OpenJDK 17.
+# === ETAPA 1: COMPILACIÓN ===
+# Usa una imagen oficial de Maven con un JDK.
+# El alias 'build' nos permite referenciar esta etapa más tarde.
 FROM maven:3.9.6-eclipse-temurin-17 AS build
-# ... (el resto de tu Dockerfile es correcto)
 
 # Establece el directorio de trabajo dentro del contenedor
 WORKDIR /app
 
-# Copia los archivos de configuración de Maven (pom.xml) para descargar las dependencias
-# Esto es más eficiente, ya que Docker puede cachear las capas de dependencias si el pom.xml no cambia.
+# Copia los archivos de Maven para descargar las dependencias
 COPY pom.xml .
 
-# Descarga las dependencias del proyecto
+# Descarga las dependencias
 RUN mvn dependency:go-offline
 
-# Copia el código fuente de tu aplicación al contenedor
+# Copia todo el código fuente del proyecto
 COPY src ./src
 
-# Empaqueta la aplicación en un archivo .war
-RUN mvn package
+# Compila la aplicación y empaquétala en un archivo .war
+RUN mvn clean package
 
 # === ETAPA 2: SERVICIO ===
-# Usa una imagen oficial de Tomcat como servidor de aplicaciones.
-# 'tomcat:9.0.86-jdk17-temurin' es una buena opción que ya incluye JDK 17.
-FROM tomcat:9.0.86-jdk17-temurin
+# Usa la imagen oficial de Tomcat con JRE 17 para el servidor
+FROM tomcat:9.0.86-jre17
 
-# Elimina la aplicación de ejemplo de Tomcat para no interferir con la tuya
+# Elimina la aplicación de ejemplo que viene con Tomcat
 RUN rm -rf /usr/local/tomcat/webapps/ROOT
 
-# Copia el archivo .war que se generó en la etapa 'build'
-# El alias 'build' se usa aquí para acceder a los archivos de la primera etapa.
-# 'LoginWebApp.war' es el nombre de tu proyecto por defecto, asegúrate de que coincida.
-# Lo copiamos a ROOT.war para que la aplicación esté disponible en la raíz del servidor (ej. http://tu-dominio/)
+# Copia el archivo .war que se generó en la etapa de compilación
+# El nombre 'LoginWebApp.war' viene del <finalName> en tu pom.xml
+# Lo copiamos a ROOT.war para que la aplicación sea la página de inicio
 COPY --from=build /app/target/LoginWebApp.war /usr/local/tomcat/webapps/ROOT.war
 
 # Expone el puerto por defecto de Tomcat
 EXPOSE 8080
 
-# Comando para iniciar el servidor Tomcat
+# Comando para iniciar el servidor
 CMD ["catalina.sh", "run"]
+
+# Comandos de HEALTHCHECK y RUN para depuración (opcional, pero útil)
+HEALTHCHECK --interval=30s --timeout=30s --start-period=5s --retries=3 \
+ CMD curl -f http://localhost:8080/ || exit 1
+
+RUN echo "=== VERIFICANDO DESPLIEGUE ===" && \
+    ls -la /usr/local/tomcat/webapps/ROOT.war && \
+    echo "=== LISTO ==="
