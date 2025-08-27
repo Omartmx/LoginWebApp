@@ -1,5 +1,8 @@
-# Usa una imagen base con Java y Maven
-FROM maven:3.8.7-openjdk-17 AS build
+# Usa una imagen de OpenJDK 17
+FROM openjdk:17-jdk-slim
+
+# Instala Maven manualmente
+RUN apt-get update && apt-get install -y Maven
 
 # Establece el directorio de trabajo dentro del contenedor
 WORKDIR /app
