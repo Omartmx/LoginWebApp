@@ -1,7 +1,7 @@
 # === ETAPA 1: BUILD ===
-# Usa una imagen oficial de Maven con OpenJDK 17. Esta etapa se encarga de compilar tu aplicación.
-# Le damos el alias 'build' a esta etapa para referenciarla más tarde.
-FROM maven:3.9.6-openjdk-17 AS build
+# Usa una imagen oficial de Maven con la implementación Eclipse Temurin de OpenJDK 17.
+FROM maven:3.9.6-eclipse-temurin-17 AS build
+# ... (el resto de tu Dockerfile es correcto)
 
 # Establece el directorio de trabajo dentro del contenedor
 WORKDIR /app
