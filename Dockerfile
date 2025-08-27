@@ -1,7 +1,7 @@
 FROM tomcat:9.0-jre17
 
 # Copiar solo lo esencial - la carpeta web/
-COPY dist/LoginWebApp.war /usr/local/tomcat/webapps/LoginWebApp.war
+COPY dist/LoginWebApp.war /usr/local/tomcat/webapps/
 
 # Las clases se copiarán manualmente o se compilarán después
 EXPOSE 8080
