@@ -1,36 +1,40 @@
-# Usa una imagen de OpenJDK 17
-FROM openjdk:17-jdk-slim
-
-# Instala Maven manualmente
-RUN apt-get update && apt-get install -y Maven
+# === ETAPA 1: BUILD ===
+# Usa una imagen oficial de Maven con OpenJDK 17. Esta etapa se encarga de compilar tu aplicación.
+# Le damos el alias 'build' a esta etapa para referenciarla más tarde.
+FROM maven:3.9.6-openjdk-17 AS build
 
 # Establece el directorio de trabajo dentro del contenedor
 WORKDIR /app
 
-# Copia los archivos de configuración de Maven para descargar dependencias primero
+# Copia los archivos de configuración de Maven (pom.xml) para descargar las dependencias
+# Esto es más eficiente, ya que Docker puede cachear las capas de dependencias si el pom.xml no cambia.
 COPY pom.xml .
 
-# Descarga las dependencias
+# Descarga las dependencias del proyecto
 RUN mvn dependency:go-offline
 
-# Copia el código fuente
+# Copia el código fuente de tu aplicación al contenedor
 COPY src ./src
 
 # Empaqueta la aplicación en un archivo .war
 RUN mvn package
 
-# Segunda etapa: Usar una imagen de Tomcat para servir la aplicación
+# === ETAPA 2: SERVICIO ===
+# Usa una imagen oficial de Tomcat como servidor de aplicaciones.
+# 'tomcat:9.0.86-jdk17-temurin' es una buena opción que ya incluye JDK 17.
 FROM tomcat:9.0.86-jdk17-temurin
 
-# Elimina la aplicación de ejemplo de Tomcat
+# Elimina la aplicación de ejemplo de Tomcat para no interferir con la tuya
 RUN rm -rf /usr/local/tomcat/webapps/ROOT
 
-# Copia el archivo .war generado en la etapa 'build' al directorio de despliegue de Tomcat
-# "LoginWebApp" debe ser el nombre de tu proyecto (definido en el pom.xml)
+# Copia el archivo .war que se generó en la etapa 'build'
+# El alias 'build' se usa aquí para acceder a los archivos de la primera etapa.
+# 'LoginWebApp.war' es el nombre de tu proyecto por defecto, asegúrate de que coincida.
+# Lo copiamos a ROOT.war para que la aplicación esté disponible en la raíz del servidor (ej. http://tu-dominio/)
 COPY --from=build /app/target/LoginWebApp.war /usr/local/tomcat/webapps/ROOT.war
 
 # Expone el puerto por defecto de Tomcat
 EXPOSE 8080
 
-# Comando para iniciar Tomcat
+# Comando para iniciar el servidor Tomcat
 CMD ["catalina.sh", "run"]
