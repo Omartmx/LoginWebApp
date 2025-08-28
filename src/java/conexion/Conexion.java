@@ -15,6 +15,9 @@ public class Conexion {
             String user = System.getenv("MYSQLUSER");
             String pass = System.getenv("MYSQLPASSWORD");
             
+            System.out.println("Connecting to: " + host + ":" + port + "/" + db);
+
+            
             String url = "jdbc:mysql://" + host + ":" + port + "/" + db + "?useSSL=true&allowPublicKeyRetrieval=true&serverTimezone=UTC";
             
             conn = DriverManager.getConnection(url, user, pass);
