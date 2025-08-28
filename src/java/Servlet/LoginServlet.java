@@ -2,7 +2,6 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/Servlet.java to edit this template
  */
-
 package Servlet;
 
 import conexion.Conexion;
@@ -31,9 +30,11 @@ public class LoginServlet extends HttpServlet {
             String email = request.getParameter("usuario");
             String password = request.getParameter("password");
 
+            System.out.println("Intento de login: " + email); // ← Para debug
+
             try {
                 Connection conn = Conexion.getConexion();
-                
+
                 // Consulta para autenticar usuario
                 String sql = "SELECT * FROM usuarios WHERE email=? AND password=?";
                 PreparedStatement ps = conn.prepareStatement(sql);
@@ -49,29 +50,16 @@ public class LoginServlet extends HttpServlet {
                     session.setAttribute("email", rs.getString("email"));
                     session.setAttribute("id_usuario", rs.getInt("id"));
 
-                    // Verificar si tiene facturas activas
-                    String sqlFactura = "SELECT * FROM facturas WHERE id_usuario = ? AND activa = TRUE ORDER BY fecha_creacion DESC LIMIT 1";
-                    PreparedStatement psFactura = conn.prepareStatement(sqlFactura);
-                    psFactura.setInt(1, rs.getInt("id"));
-                    ResultSet rsFactura = psFactura.executeQuery();
-                    
-                    if (rsFactura.next()) {
-                        session.setAttribute("factura_activa", true);
-                        session.setAttribute("id_factura", rsFactura.getInt("id"));
-                    } else {
-                        session.setAttribute("factura_activa", false);
-                    }
-
                     response.sendRedirect("principal.jsp");
                 } else {
-                    // ❌ Usuario no encontrado
-                    out.println("<h3>Email o contraseña incorrectos.</h3>");
-                    out.println("<a href='login.jsp'>Volver</a>");
+                    // ❌ Credenciales incorrectas
+                    response.sendRedirect("login.jsp?error=Email o contraseña incorrectos");
                 }
 
                 conn.close();
             } catch (Exception e) {
-                out.println("<h3>Error: " + e.getMessage() + "</h3>");
+                // ❌ Error de servidor
+                response.sendRedirect("login.jsp?error=Error del servidor: " + e.getMessage());
             }
         }
     }

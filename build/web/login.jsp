@@ -233,7 +233,7 @@
         <form class="login-form" action="LoginServlet" method="POST" onsubmit="return validateForm()">
             <div class="form-group">
                 <label for="usuario">EMAIL</label>
-                <input type="email" id="usuario" name="usuario" required>
+                <input type="email" id="usuario" name="email" required>
             </div>
 
             <div class="form-group">
