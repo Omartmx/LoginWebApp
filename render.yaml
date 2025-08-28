@@ -1,9 +1,9 @@
 services:
   - type: web
     name: login-webapp
-    env: docker
-    dockerfilePath: Dockerfile  # ✅ Usa Dockerfile personalizado
-    dockerContext: .
+    env: java
+    buildCommand: mvn clean package -DskipTests
+    startCommand: java -jar target/dependency/webapp-runner.jar target/LoginWebApp.war --port $PORT
     envVars:
       - key: PORT
         value: 8080
