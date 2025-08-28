@@ -2,6 +2,6 @@ package conexion;
 import java.sql.Connection;
 
 public interface IConexion {
-    Connection getConnection();
+    Connection getConexion();
     void desconectar();
 }

@@ -262,6 +262,7 @@
     </div>
 
     <script>
+        
         // Validación del formulario
         function validateForm() {
             const nombre = document.getElementById('nombre').value;
@@ -313,6 +314,7 @@
         }
         
         // Verificar parámetros de URL para mensajes
+        
         document.addEventListener('DOMContentLoaded', function() {
             const urlParams = new URLSearchParams(window.location.search);
             
