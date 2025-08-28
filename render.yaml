@@ -2,26 +2,18 @@ services:
   - type: web
     name: login-webapp
     env: java
-    buildCommand: mvn clean compile
-    startCommand: java -cp target/classes:target/dependency/* com.tuapp.Main
+    buildCommand: mvn clean compile war:war
+    startCommand: java -jar target/dependency/webapp-runner.jar target/LoginWebApp.war --port $PORT
     envVars:
+      - key: PORT
+        value: 8080
       - key: MYSQLHOST
-        fromDatabase:
-          name: railway-mysql
-          property: host
+        fromSecret: MYSQLHOST
       - key: MYSQLPORT
-        fromDatabase:
-          name: railway-mysql
-          property: port
+        fromSecret: MYSQLPORT
       - key: MYSQLDATABASE
-        fromDatabase:
-          name: railway-mysql
-          property: database
+        fromSecret: MYSQLDATABASE
       - key: MYSQLUSER
-        fromDatabase:
-          name: railway-mysql
-          property: user
+        fromSecret: MYSQLUSER
       - key: MYSQLPASSWORD
-        fromDatabase:
-          name: railway-mysql
-          property: password
+        fromSecret: MYSQLPASSWORD
